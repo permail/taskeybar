@@ -6,7 +6,7 @@ global windows := []  ; Initialize windows as a global variable
 LWin & LButton::ShowWindowList()
 
 ShowWindowList() {
-    Gui := GuiCreate()  ; Create GUI
+    Gui := Gui()  ; Create GUI using the correct method in AHK v2
     ListBox := Gui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
     Gui.OnEvent("Close", "ExitApp")  ; Exit script when GUI is closed
 
