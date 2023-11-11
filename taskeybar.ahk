@@ -8,7 +8,7 @@ LWin & LButton::ShowWindowList()
 ShowWindowList() {
     local myGui := Gui()  ; Create GUI using the correct method in AHK v2 and avoid naming conflict
     ListBox := myGui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
-    myGui.OnEvent("Close", "ExitApp")  ; Exit script when GUI is closed
+    myGui.OnEvent("Close", ExitApp)  ; Correct usage of the ExitApp function in the OnEvent method
 
     xpos := "", ypos := ""
     MouseGetPos(&xpos, &ypos)
