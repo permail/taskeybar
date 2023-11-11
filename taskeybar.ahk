@@ -1,14 +1,18 @@
 #Requires AutoHotkey v2.0-a
 #SingleInstance Force
 
+ExitApp() {
+    ExitApp  ; Correctly exits the script
+}
+
 global windows := []  ; Initialize windows as a global variable
 
 LWin & LButton::ShowWindowList()
 
 ShowWindowList() {
-    local myGui := Gui()  ; Create GUI using the correct method in AHK v2 and avoid naming conflict
+    myGui := Gui()  ; Create GUI using the correct method in AHK v2
     ListBox := myGui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
-    myGui.OnEvent("Close", ExitApp)  ; Correct usage of the ExitApp function in the OnEvent method
+    myGui.OnEvent("Close", ExitApp)  ; Exit script when GUI is closed
 
     xpos := "", ypos := ""
     MouseGetPos(&xpos, &ypos)
@@ -32,8 +36,4 @@ WindowSelected(Control) {
         WinActivate("ahk_id " . hWnd)  ; Activate selected window
         Control.Gui.Close()  ; Close the GUI
     }
-}
-
-ExitApp() {
-    ExitApp  ; Correctly exits the script
 }
