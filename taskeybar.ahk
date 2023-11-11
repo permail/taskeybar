@@ -1,11 +1,12 @@
 #Requires AutoHotkey v2.0-a
 
-Hotkey("LWin & LButton", Func("ShowWindowList"))
+; Define the hotkey
+LWin & LButton::ShowWindowList()
 
 ShowWindowList() {
     Gui := GuiCreate()  ; Create GUI
     ListBox := Gui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
-    Gui.OnEvent("Close", Func("ExitApp"))  ; Exit script when GUI is closed
+    Gui.OnEvent("Close", "ExitApp")  ; Exit script when GUI is closed
 
     ; Initialize variables for MouseGetPos
     xpos := "", ypos := ""
@@ -20,7 +21,7 @@ ShowWindowList() {
         }
     }
 
-    ListBox.OnEvent("Select", Func("WindowSelected"))  ; Bind selection event to function
+    ListBox.OnEvent("Select", "WindowSelected")  ; Bind selection event to function
     Gui.Show("x" . xpos . " y" . ypos . " h300 w200")  ; Show GUI at mouse position
 }
 
