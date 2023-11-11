@@ -1,7 +1,6 @@
 #Requires AutoHotkey v2.0-a
 #SingleInstance Force
 
-
 global windows := []  ; Initialize windows as a global variable
 
 LWin & LButton::ShowWindowList()
