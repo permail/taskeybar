@@ -1,41 +1,33 @@
-; Create the GUI
-Gui := GuiCreate()
-Gui.Add("ListBox", "vWindowList w200 h300", "")
-Gui.Show("x0 y0 h300 w200")
+Gui := GuiCreate()  ; Create GUI
+ListBox := Gui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
 
-; Function to refresh the window list
+; Populate ListBox with open windows
 UpdateWindowList := () => {
-    GuiControlGet, ListBox, % "WindowList"
-    ListBox.Delete()  ; Clear the ListBox
-    WinGet, windows, List  ; Get the list of windows
-    Loop, % windows {
-        thisID := windows%A_Index%
-        WinGetTitle, thisTitle, % "ahk_id " thisID
-        if (thisTitle != "")  ; Add non-empty titles to the list
-            ListBox.Add(thisTitle)
-    }
-}
-
-; Function to handle window selection
-ListBox.OnEvent("Select", Func("SelectWindow"))
-SelectWindow := () => {
-    GuiControlGet, CurrentSelection, % "WindowList"
-    WinGet, windows, List
-    Loop, % windows {
-        thisID := windows%A_Index%
-        WinGetTitle, thisTitle, % "ahk_id " thisID
-        if (thisTitle = CurrentSelection) {
-            WinActivate, % "ahk_id " thisID
-            break
+    ListBox.Delete()  ; Clear current list
+    WinGet, windows, List  ; Retrieve list of open windows
+    for index, hWnd in windows {
+        title := WinGetTitle("ahk_id " . hWnd)
+        if (title != "") {
+            ListBox.Add(title)  ; Add window title to list
         }
     }
 }
 
-; Hotkey to refresh the window list
-Hotkey("^!r", UpdateWindowList)
+; Function called when a window is selected from the list
+WindowSelected := () => {
+    selectedIndex := ListBox.SelectedIndex
+    if (selectedIndex) {
+        hWnd := windows[selectedIndex]
+        WinActivate("ahk_id " . hWnd)  ; Activate selected window
+    }
+}
 
-; Initial refresh of the window list
-UpdateWindowList()
+ListBox.OnEvent("Select", WindowSelected)  ; Bind selection event to function
 
-; Exit the script when the GUI is closed
-Gui.OnEvent("Close", Func("ExitApp"))
+Gui.Show("x0 y0 h300 w200")  ; Show GUI
+
+UpdateWindowList()  ; Initial population of window list
+
+Hotkey("^!r", UpdateWindowList)  ; Hotkey to refresh window list
+
+Gui.OnEvent("Close", "ExitApp")  ; Exit script when GUI is closed
