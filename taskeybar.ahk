@@ -20,7 +20,7 @@ ShowWindowList() {
         }
     }    
 
-    ListBox.OnEvent("Select", WindowSelected)  ; Bind selection event to function
+    ListBox.OnEvent("Change", WindowSelected)  ; Bind selection event to function
     myGui.OnEvent("Close", ExitApp)  ; Exit script when GUI is closed using Func("ExitApp")
     myGui.Show("x" . xpos . " y" . ypos . " h300 w200")  ; Show GUI at mouse position
 }
