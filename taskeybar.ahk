@@ -1,40 +1,49 @@
 #Persistent
 #NoEnv
-SetBatchLines, -1
+SetBatchLines(-1)
 
 ; Create the GUI
-Gui, Add, ListBox, vWindowList gSelectWindow w200 h300, 
-Gui, Show, x0 y0 h300 w200, Windows List
+Gui := GuiCreate("Windows List")
+Gui.Add("ListBox", "vWindowList gSelectWindow w200 h300")
+Gui.OnEvent("Close", "GuiClose")
+Gui.Show("x0 y0 h300 w200")
 
 ; Function to refresh the window list
-RefreshWindowList() {
-    GuiControl,, WindowList,  ; Clear the ListBox
-    WinGet, windows, List  ; Get the list of windows
-    Loop, %windows%
+RefreshWindowList := () => {
+    global Gui
+    WindowList := Gui.WindowList
+    WindowList.Delete()
+    windows := WinGetList()
+    for each, id in windows
     {
-        thisID := windows%A_Index%
-        WinGetTitle, thisTitle, ahk_id %thisID%
-        if (thisTitle != "")  ; Add non-empty titles to the list
-            GuiControl,, WindowList, %thisTitle%
+        thisTitle := WinGetTitle("ahk_id " . id)
+        if (thisTitle != "")
+            WindowList.Add("", thisTitle)
     }
 }
 
 ; Function to handle window selection
-SelectWindow:
-GuiControlGet, CurrentSelection,, WindowList
-WinGet, windows, List
-Loop, %windows%
-{
-    thisID := windows%A_Index%
-    WinGetTitle, thisTitle, ahk_id %thisID%
-    if (thisTitle = CurrentSelection) {
-        WinActivate, ahk_id %thisID%
-        break
+SelectWindow := () => {
+    global Gui
+    CurrentSelection := Gui.WindowList.Value
+    windows := WinGetList()
+    for each, id in windows
+    {
+        thisTitle := WinGetTitle("ahk_id " . id)
+        if (thisTitle = CurrentSelection)
+        {
+            WinActivate("ahk_id " . id)
+            break
+        }
     }
 }
-return
 
 ; Hotkey to refresh the window list
-^!r::  ; Ctrl+Alt+R
+Hotkey("^!r", RefreshWindowList)
+
+GuiClose := () => {
+    ExitApp()
+}
+
+; Initial refresh of the window list
 RefreshWindowList()
-return
