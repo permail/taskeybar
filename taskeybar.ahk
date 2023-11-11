@@ -16,9 +16,9 @@ ShowWindowList() {
     for index, hWnd in windows {
         title := WinGetTitle("ahk_id " . hWnd)
         if (title != "") {
-            ListBox.Add("", title)  ; Add window title to list
+            ListBox.Add(title)  ; Update this line
         }
-    }
+    }    
 
     ListBox.OnEvent("Select", Func("WindowSelected"))  ; Bind selection event to function
     myGui.OnEvent("Close", Func("ExitApp"))  ; Exit script when GUI is closed using Func("ExitApp")
