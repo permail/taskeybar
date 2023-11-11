@@ -1,6 +1,7 @@
 #Requires AutoHotkey v2.0-a
+#SingleInstance, force
 
-global windows  ; Declare windows as a global variable
+global windows := []  ; Initialize windows as a global variable
 
 LWin & LButton::ShowWindowList()
 
@@ -36,4 +37,3 @@ WindowSelected(Control) {
 ExitApp() {
     ExitApp  ; Correctly exits the script
 }
-
