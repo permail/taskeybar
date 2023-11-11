@@ -34,5 +34,6 @@ WindowSelected(Control) {
 }
 
 ExitApp() {
-    ExitApp()
+    ExitApp  ; Correctly exits the script
 }
+
