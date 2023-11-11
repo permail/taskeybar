@@ -16,7 +16,7 @@ ShowWindowList() {
     for index, hWnd in windows {
         title := WinGetTitle("ahk_id " . hWnd)
         if (title != "") {
-            ListBox.Add(title)  ; Update this line
+            ListBox.Add([title]) ; Update this line
         }
     }    
 
