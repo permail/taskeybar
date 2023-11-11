@@ -1,6 +1,7 @@
 #Requires AutoHotkey v2.0-a
 
-; Define the hotkey
+global windows  ; Declare windows as a global variable
+
 LWin & LButton::ShowWindowList()
 
 ShowWindowList() {
@@ -8,11 +9,9 @@ ShowWindowList() {
     ListBox := Gui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
     Gui.OnEvent("Close", "ExitApp")  ; Exit script when GUI is closed
 
-    ; Initialize variables for MouseGetPos
     xpos := "", ypos := ""
     MouseGetPos(&xpos, &ypos)
 
-    ; Populate ListBox with open windows
     windows := WinGetList()  ; Retrieve list of open windows
     for index, hWnd in windows {
         title := WinGetTitle("ahk_id " . hWnd)
