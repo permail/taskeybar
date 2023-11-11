@@ -8,7 +8,6 @@ LWin & LButton::ShowWindowList()
 ShowWindowList() {
     myGui := Gui()  ; Create GUI using the correct method in AHK v2
     ListBox := myGui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
-    myGui.OnEvent("Close", Func("ExitApp"))  ; Exit script when GUI is closed using Func("ExitApp")
 
     xpos := "", ypos := ""
     MouseGetPos(&xpos, &ypos)
@@ -22,6 +21,7 @@ ShowWindowList() {
     }
 
     ListBox.OnEvent("Select", Func("WindowSelected"))  ; Bind selection event to function
+    myGui.OnEvent("Close", Func("ExitApp"))  ; Exit script when GUI is closed using Func("ExitApp")
     myGui.Show("x" . xpos . " y" . ypos . " h300 w200")  ; Show GUI at mouse position
 }
 
