@@ -1,5 +1,6 @@
 #Requires AutoHotkey v2.0-a
-#SingleInstance, force
+#SingleInstance Force
+
 
 global windows := []  ; Initialize windows as a global variable
 
