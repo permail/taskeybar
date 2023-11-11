@@ -5,6 +5,7 @@ Hotkey("LWin & LButton", Func("ShowWindowList"))
 
 ; Function to show the window list
 ShowWindowList() {
+    local mouseX, mouseY
     MouseGetPos(mouseX, mouseY)
     Gui := GuiCreate()  ; Create GUI
     ListBox := Gui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
