@@ -6,9 +6,9 @@ global windows := []  ; Initialize windows as a global variable
 LWin & LButton::ShowWindowList()
 
 ShowWindowList() {
-    Gui := Gui()  ; Create GUI using the correct method in AHK v2
-    ListBox := Gui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
-    Gui.OnEvent("Close", "ExitApp")  ; Exit script when GUI is closed
+    local myGui := Gui()  ; Create GUI using the correct method in AHK v2 and avoid naming conflict
+    ListBox := myGui.Add("ListBox", "vWindowList w200 h300")  ; Add ListBox
+    myGui.OnEvent("Close", "ExitApp")  ; Exit script when GUI is closed
 
     xpos := "", ypos := ""
     MouseGetPos(&xpos, &ypos)
@@ -22,7 +22,7 @@ ShowWindowList() {
     }
 
     ListBox.OnEvent("Select", "WindowSelected")  ; Bind selection event to function
-    Gui.Show("x" . xpos . " y" . ypos . " h300 w200")  ; Show GUI at mouse position
+    myGui.Show("x" . xpos . " y" . ypos . " h300 w200")  ; Show GUI at mouse position
 }
 
 WindowSelected(Control) {
