@@ -1,4 +1,4 @@
-#Require AhkVersion 2
+#Requires AutoHotkey v2.0-a
 
 ; Hotkey to show window list
 Hotkey("LWin & LButton", Func("ShowWindowList"))
