@@ -40,6 +40,7 @@ myListBox_Change(Ctrl, *) {
         windowTitle := Ctrl.Text
         WinActivate(windowTitle)  ; Activate selected window
     }
+    UpdateWindowList()
 }
 
 myListBox_LostFocus(Ctrl, *) {
