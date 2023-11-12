@@ -26,7 +26,7 @@ ShowWindowList() {
 }
 
 WindowSelected(*) {
-    selectedIndex := Control.SelectedIndex
+    selectedIndex := this.Value
     if (selectedIndex) {
         hWnd := windows[selectedIndex]
         WinActivate("ahk_id " . hWnd)  ; Activate selected window
