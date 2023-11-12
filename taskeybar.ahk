@@ -26,14 +26,14 @@ ShowWindowList() {
 }
 
 WindowSelected(LBC, *) {
-    selectedIndex := LBC.SelectedIndex
-    if (selectedIndex) {
+    selectedIndex := LBC.Value
+    if (selectedIndex > 0) {
         hWnd := windows[selectedIndex]
         WinActivate("ahk_id " . hWnd)  ; Activate selected window
         LBC.Gui.Close()  ; Close the GUI
     }
 }
 
-ExitApp(*) {
-    ExitApp  ; Correctly exits the script
+ExitApp(Gui, *) {
+    ExitApp 0  ; Correctly exits the script
 }
