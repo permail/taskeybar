@@ -11,10 +11,10 @@ ShowWindowList() {
         CreateGui()
     }
     UpdateWindowList()
-    ShowGui()
+    ShowGuiAtMouse()
 }
 
-ShowGui(){
+ShowGuiAtMouse(){
     CoordMode "Mouse", "Screen"
     MouseGetPos(&xpos, &ypos)
     myGui.Show("x" . xpos . " y" . ypos . " AutoSize")  ; Show GUI at mouse position
@@ -36,6 +36,8 @@ UpdateWindowList(){
         windowTitle := WinGetTitle("ahk_id " . hWnd)
         if (windowTitle != "") {
             myListBox.Add([windowTitle]) ; Update this line
+        }else{
+            myListBox.Add(["hWnd " . hWnd]) 
         }
     }
 
@@ -47,13 +49,13 @@ UpdateWindowList(){
 }
 
 CloseGui(){
-    myGui.Delete()
+    myGui.Close.Call()
 
     global guiExists := 0
 }
 
 myListBox_Change(Ctrl, *) {
-    MsgBox("global list: " . windows.Length)
+;    MsgBox("global list: " . windows.Length)
 
     selectedIndex := Ctrl.Value
     if (selectedIndex > 0) {
@@ -61,10 +63,6 @@ myListBox_Change(Ctrl, *) {
         WinActivate(windowTitle)  ; Activate selected window
         CloseGui()
     }
-}
-
-myListBox_LostFocus(Ctrl, *) {
-
 }
 
 myGui_Escape(Gui,*){
