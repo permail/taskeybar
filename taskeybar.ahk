@@ -15,7 +15,8 @@ ShowWindowList() {
         }
     }
 
-    activeWindowTitle := WinGetTitle("ahk_id " . WinActive)
+    activeWindowhWnd := WinActive
+    activeWindowTitle := WinGetTitle("ahk_id " . activeWindowhWnd)
     if (activeWindowTitle != ""){
         myListBox.Text := activeWindowTitle
     }
