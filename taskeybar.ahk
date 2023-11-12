@@ -2,6 +2,7 @@
 #SingleInstance Force
 
 global guiExists := 0
+global myGui
 
 LWin & LButton::ShowWindowList()
 
@@ -25,6 +26,7 @@ CreateGui(){
     global myListBox := myGui.Add("ListBox", "vWindowList w300 h400")  ; Add ListBox
 
     myListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
+    myGui.OnEvent("Escape", myGui_Escape)
 }
 
 UpdateWindowList(){
@@ -45,7 +47,8 @@ UpdateWindowList(){
 }
 
 CloseGui(){
-    myGui.Close()
+    myGui.Delete()
+
     global guiExists := 0
 }
 
@@ -62,4 +65,8 @@ myListBox_Change(Ctrl, *) {
 
 myListBox_LostFocus(Ctrl, *) {
 
+}
+
+myGui_Escape(Gui,*){
+    CloseGui()
 }
