@@ -25,8 +25,9 @@ CreateGui(){
     global myGui := Gui()  ; Create GUI using the correct method in AHK v2
     global myListBox := myGui.Add("ListBox", "vWindowList w300 h400")  ; Add ListBox
 
-    myListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
     myGui.OnEvent("Escape", myGui_Escape)
+    myListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
+    myListBox.OnEvent("LoseFocus",myListBox_LoseFocus)
 }
 
 UpdateWindowList(){
@@ -37,7 +38,7 @@ UpdateWindowList(){
         if (windowTitle != "") {
             myListBox.Add([windowTitle]) ; Update this line
         }else{
-            myListBox.Add(["hWnd " . hWnd]) 
+;            myListBox.Add(["hWnd " . hWnd]) 
         }
     }
 
@@ -49,20 +50,21 @@ UpdateWindowList(){
 }
 
 CloseGui(){
-    myGui.Close.Call()
-
+    myGui.Destroy()
     global guiExists := 0
 }
 
 myListBox_Change(Ctrl, *) {
-;    MsgBox("global list: " . windows.Length)
-
     selectedIndex := Ctrl.Value
     if (selectedIndex > 0) {
         windowTitle := Ctrl.Text
         WinActivate(windowTitle)  ; Activate selected window
         CloseGui()
     }
+}
+
+myListBox_LoseFocus(Ctrl,*){
+    CloseGui()
 }
 
 myGui_Escape(Gui,*){
