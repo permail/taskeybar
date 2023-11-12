@@ -20,7 +20,9 @@ ShowWindowList() {
     ListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
     myGui.OnEvent("Close", myGui_Close)  ; Exit script when GUI is closed using Func("ExitApp")
 
+    CoordMode "Mouse", "Screen"
     MouseGetPos(&xpos, &ypos)
+/*    MsgBox("x" . xpos . " y" . ypos . " AutoSize") */
     myGui.Show("x" . xpos . " y" . ypos . " AutoSize")  ; Show GUI at mouse position
 }
 
