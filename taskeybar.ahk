@@ -17,7 +17,7 @@ ShowWindowList() {
         }
     }
     if (activeWindowTitle > ""){
-        myListBox.Text = activeWindowTitle
+        myListBox.Text := activeWindowTitle
     }
 
     myListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
