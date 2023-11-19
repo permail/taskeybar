@@ -18,7 +18,7 @@ ShowWindowList() {
     }    
 
     ListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
-    myGui.OnEvent("Close", myGui_Close)  ; Exit script when GUI is closed using Func("ExitApp")
+/*    myGui.OnEvent("Close", myGui_Close)  ; Exit script when GUI is closed using Func("ExitApp") */
 
     CoordMode "Mouse", "Screen"
     MouseGetPos(&xpos, &ypos)
@@ -27,9 +27,13 @@ ShowWindowList() {
 }
 
 myListBox_Change(Ctrl, *) {
+    for index, hWnd in windows {
+        MsgBox(index . ": " . hWnd)
+    }    
+
     selectedIndex := Ctrl.Value
     if (selectedIndex > 0) {
-        hWnd := windows[selectedIndex]
+        hWnd := windows.Get(selectedIndex)
         WinActivate("ahk_id " . hWnd)  ; Activate selected window
         Ctrl.Gui.Close()  ; Close the GUI
     }
