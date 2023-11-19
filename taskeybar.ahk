@@ -25,12 +25,12 @@ ShowWindowList() {
     myGui.Show("x" . xpos . " y" . ypos . " w320 h420")  ; Show GUI at mouse position
 }
 
-WindowSelected(thisGui) {
-    selectedIndex := thisGui.SelectedIndex
+WindowSelected(LBC, *) {
+    selectedIndex := LBC.SelectedIndex
     if (selectedIndex) {
         hWnd := windows[selectedIndex]
         WinActivate("ahk_id " . hWnd)  ; Activate selected window
-        thisGui.Gui.Close()  ; Close the GUI
+        LBC.Gui.Close()  ; Close the GUI
     }
 }
 
