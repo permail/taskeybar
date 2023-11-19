@@ -22,7 +22,7 @@ ShowGuiAtMouse(){
 
 CreateGui(){
     global guiExists := 1
-    global myGui := Gui()  ; Create GUI using the correct method in AHK v2
+    global myGui := Gui(,"Taskeybar List of Windows")  ; Create GUI using the correct method in AHK v2
     global myListBox := myGui.Add("ListBox", "vWindowList w300 h400")  ; Add ListBox
 
     myGui.OnEvent("Escape", myGui_Escape)
@@ -35,7 +35,7 @@ UpdateWindowList(){
     myListBox.Delete()
     for index, hWnd in windows {
         windowTitle := WinGetTitle("ahk_id " . hWnd)
-        if (windowTitle != "") {
+        if (windowTitle != "" && windowTitle != myGui.Title) {
             myListBox.Add([windowTitle]) ; Update this line
         }else{
 ;            myListBox.Add(["hWnd " . hWnd]) 
