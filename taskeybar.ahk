@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0-a
 #SingleInstance Force
 
-global version := "0.2.0-alpha30"
+global version := "0.2.0-alpha35"
 msgBox("Taskeybar v" . version . " loaded")
 
 global guiExists := 0
@@ -41,26 +41,33 @@ UpdateWindowList(){
     global namedWindows 
     namedWindows := Array()
 
-    activeWindowhWnd := WinActive("A")
-
-    myListBox.Delete()
     for index, hWnd in windows {
         windowTitle := WinGetTitle("ahk_id " . hWnd)
         if (windowTitle != "" && windowTitle != myGui.Title) {
-            namedWindows.Push(hWnd) 
 
             processName := WinGetProcessName(hWnd)
-            itemText :=  processName . " - " . windowTitle
-            myListBox.Add([itemText])
+            itemText :=  windowTitle . " (" . processName . ")"
+            sortby :=  processName . " - " . windowTitle
 
-            ; if there is an active window, pre-select that, as a visual hint
-            if (activeWindowhWnd = hWnd) {
-                myListBox.Text := itemText
-            }
-        }else{
-;            myListBox.Add(["hWnd " . hWnd]) 
+            stuff := sortBy . "`t" . hWnd . "`t" . itemText
+            namedWindows.Push(stuff) 
         }
     }
+
+    ; update ui list 
+    activeWindowhWnd := WinActive("A")
+    myListBox.Delete()
+    for index, stuff in namedWindows {
+        stuffParts := StrSplit(stuff, "`t")
+        hWnd :=  Integer(stuffParts[2])
+        itemText := stuffParts[3]
+        myListBox.Add([itemText])
+
+        ; if there is an active window, pre-select that, as a visual hint
+        if (activeWindowhWnd = hWnd) {
+            myListBox.Text := itemText
+        }
+     }
 }
 
 CloseGui(){
@@ -73,8 +80,11 @@ myListBox_Change(Ctrl, *) {
 
     selectedIndex := Ctrl.Value
     if (selectedIndex > 0) {
-        selectedWindowHwnd := namedWindows[selectedIndex]
-        WinActivate(selectedWindowHwnd) 
+        stuff := namedWindows[selectedIndex]
+        stuffParts := StrSplit(stuff, "`t")
+        hWnd :=  Integer(stuffParts[2])
+        MsgBox(selectedIndex . "->" . hwnd)
+        WinActivate(hWnd) 
         CloseGui()
     }
 }
