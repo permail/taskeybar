@@ -5,17 +5,22 @@ LWin & LButton::ShowWindowList()
 
 ShowWindowList() {
     myGui := Gui()  ; Create GUI using the correct method in AHK v2
-    ListBox := myGui.Add("ListBox", "vWindowList w300 h400")  ; Add ListBox
+    myListBox := myGui.Add("ListBox", "vWindowList w300 h400")  ; Add ListBox
+
+    WinActive &activeWindowTitle
 
     windows := WinGetList()  ; Retrieve list of open windows
     for index, hWnd in windows {
-        title := WinGetTitle("ahk_id " . hWnd)
-        if (title != "") {
-            ListBox.Add([title]) ; Update this line
+        windowTitle := WinGetTitle("ahk_id " . hWnd)
+        if (windowTitle != "") {
+            myListBox.Add([windowTitle]) ; Update this line
         }
-    }    
+    }
+    if (activeWindowTitle > ""){
+        myListBox.Text = activeWindowTitle
+    }
 
-    ListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
+    myListBox.OnEvent("Change", myListBox_Change)  ; Bind selection event to function
 
     CoordMode "Mouse", "Screen"
     MouseGetPos(&xpos, &ypos)
@@ -25,10 +30,8 @@ ShowWindowList() {
 myListBox_Change(Ctrl, *) {
     selectedIndex := Ctrl.Value
     if (selectedIndex > 0) {
-        windowText := Ctrl.Text()
-
-        hWnd := windows.Get(selectedIndex)
-        WinActivate("ahk_id " . hWnd)  ; Activate selected window
-        Ctrl.Gui.Close()  ; Close the GUI
+        windowTitle := Ctrl.Text
+        WinActivate(windowTitle)  ; Activate selected window
+;        Ctrl.Gui.Close()  ; Close the GUI
     }
 }
