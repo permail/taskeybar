@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0-a
 #SingleInstance Force
 
-global version := "0.2.0-alpha47"
+global version := "0.2.0"
 msgBox("Taskeybar v" . version . " loaded.`nWin+LeftClick to display.")
 
 global guiExists := 0
@@ -46,7 +46,6 @@ UpdateWindowList(){
         if (windowTitle != "" && windowTitle != myGui.Title) {
 
             processName := WinGetProcessName(hWnd)
-            itemText := windowTitle . " (" . processName . ")"
             itemText := windowTitle . " (" . processName . ")"
             sortby := processName . " - " . windowTitle
 
