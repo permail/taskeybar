@@ -7,8 +7,6 @@ ShowWindowList() {
     myGui := Gui()  ; Create GUI using the correct method in AHK v2
     myListBox := myGui.Add("ListBox", "vWindowList w300 h400")  ; Add ListBox
 
-    WinActive &activeWindowTitle
-
     windows := WinGetList()  ; Retrieve list of open windows
     for index, hWnd in windows {
         windowTitle := WinGetTitle("ahk_id " . hWnd)
@@ -16,7 +14,9 @@ ShowWindowList() {
             myListBox.Add([windowTitle]) ; Update this line
         }
     }
-    if (activeWindowTitle > ""){
+
+    activeWindowTitle := WinGetTitle("ahk_id " . WinActive)
+    if (activeWindowTitle != ""){
         myListBox.Text := activeWindowTitle
     }
 
