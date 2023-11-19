@@ -1,8 +1,8 @@
 #Requires AutoHotkey v2.0-a
 #SingleInstance Force
 
-global version := "0.2.0-alpha35"
-msgBox("Taskeybar v" . version . " loaded")
+global version := "0.2.0-alpha47"
+msgBox("Taskeybar v" . version . " loaded.`nWin+LeftClick to display.")
 
 global guiExists := 0
 global myGui
@@ -22,12 +22,12 @@ ShowGuiAtMouse(){
     MouseGetPos(&xpos, &ypos)
     ; Show GUI at mouse position with previous app under the pointer,
     ; so that the user only needs to click without any prior movement.
-    myGui.Show("x" . xpos-256 . " y" . ypos-60 . " AutoSize")  
+    myGui.Show("x" . xpos-256 . " y" . ypos-48 . " AutoSize")  
 }
 
 CreateGui(){
     global guiExists := 1
-    global myGui := Gui(,"Taskeybar List of Windows") 
+    global myGui := Gui(,"Taskeybar - List of Windows") 
     global myListBox := myGui.Add("ListBox", "vWindowList w300 h400")
 
     myGui.OnEvent("Escape", myGui_Escape)
@@ -46,13 +46,25 @@ UpdateWindowList(){
         if (windowTitle != "" && windowTitle != myGui.Title) {
 
             processName := WinGetProcessName(hWnd)
-            itemText :=  windowTitle . " (" . processName . ")"
-            sortby :=  processName . " - " . windowTitle
+            itemText := windowTitle . " (" . processName . ")"
+            itemText := windowTitle . " (" . processName . ")"
+            sortby := processName . " - " . windowTitle
 
             stuff := sortBy . "`t" . hWnd . "`t" . itemText
             namedWindows.Push(stuff) 
         }
     }
+
+    ; sort the named windows
+    sortme := ""
+    for index, stuff in namedWindows {
+        if ( sortme != "" ) {
+            sortme := sortme . "`n"
+        }
+        sortme := sortme . stuff
+    }
+    sorted := sort(sortme)
+    namedWindows := StrSplit(sorted,"`n")
 
     ; update ui list 
     activeWindowhWnd := WinActive("A")
@@ -83,7 +95,6 @@ myListBox_Change(Ctrl, *) {
         stuff := namedWindows[selectedIndex]
         stuffParts := StrSplit(stuff, "`t")
         hWnd :=  Integer(stuffParts[2])
-        MsgBox(selectedIndex . "->" . hwnd)
         WinActivate(hWnd) 
         CloseGui()
     }
