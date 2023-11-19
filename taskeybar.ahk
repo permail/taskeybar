@@ -25,7 +25,7 @@ ShowWindowList() {
     myGui.Show("x" . xpos . " y" . ypos . " w320 h420")  ; Show GUI at mouse position
 }
 
-WindowSelected(Control) {
+WindowSelected(*) {
     selectedIndex := Control.SelectedIndex
     if (selectedIndex) {
         hWnd := windows[selectedIndex]
@@ -34,6 +34,6 @@ WindowSelected(Control) {
     }
 }
 
-ExitApp() {
+ExitApp(*) {
     ExitApp  ; Correctly exits the script
 }
