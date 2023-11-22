@@ -6,8 +6,16 @@ After pressing the key-and-mouse combination Win+LeftMouseButton, taskeybar show
 
 Click a line to activate the corresponding window. The Taskeybar window disappears, but Taskeybars stays in the background and is ready to activate again.
 
+![usage_1](https://github.com/permail/taskeybar/assets/78616410/602194d3-b73f-4bce-a2c1-81ec6d4dafd6)
+
 ## Running
-Run the taskeybar.exe once. A message box confirms a successful start. You can have taskeybar.exe start automatically when starting Windows or logging on, using Windows' built-in features, e.g. start menu / autostart.
+Run the taskeybar.exe once. A message box confirms a successful start. 
+
+![started](https://github.com/permail/taskeybar/assets/78616410/36b7d624-ffb3-4718-b58b-265dd54d46d3)
+
+You can have taskeybar.exe start automatically when starting Windows or logging on, using Windows' built-in features, e.g. start menu / autostart.
 
 ## Developer Notes
 Taskeybar is implemented as an [autohotkey](https://www.autohotkey.com/) [v2](https://www.autohotkey.com/v2/) script. Therefore it is quite easy to understand and adapt to your needs. Feel free to post pull requests.
+
+
