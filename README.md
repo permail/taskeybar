@@ -10,4 +10,4 @@ Click a line to activate the corresponding window. The Taskeybar window disappea
 Run the taskeybar.exe once. A message box confirms a successful start. You can have taskeybar.exe start automatically when starting Windows or logging on, using Windows' built-in features, e.g. start menu / autostart.
 
 ## Developer Notes
-Taskeybar is implemented as an [autohotkey](https://www.autohotkey.com/) [v2](https://www.autohotkey.com/v2/) script. Therefore it is quite easy to understand and adapt to your needs. Feel free to post push requests.
+Taskeybar is implemented as an [autohotkey](https://www.autohotkey.com/) [v2](https://www.autohotkey.com/v2/) script. Therefore it is quite easy to understand and adapt to your needs. Feel free to post pull requests.
