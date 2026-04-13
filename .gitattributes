@@ -1,0 +1,5 @@
+* text=auto eol=lf
+
+*.ahk text eol=lf
+*.md text eol=lf
+*.exe binary
