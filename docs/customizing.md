@@ -24,7 +24,7 @@ Common examples:
 - first keyboard fallback position
   `KeyboardFallbackLeftFrameAdjustment`, `KeyboardFallbackY`
 - layout dimensions
-  `LayoutMargin`, `FuzzyWidth`, `FilterHeight`,
+  `LayoutMargin`, `FuzzyWidth`, `HelpWidth`, `FilterHeight`,
   `MinimumControlWidth`, `MinimumListHeight`
 
 ## Hotkeys

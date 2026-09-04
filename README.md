@@ -41,9 +41,14 @@ Press `Win+Left Mouse Button` to pop up Taskeybar near the pointer, or press
 `Ctrl+Win+Space` to reopen it at its last keyboard-triggered position.
 
 Start typing to filter the list. Use the arrow keys to move the selection,
-`Enter` to activate it, `Ctrl+C` to copy the selected line, or click an entry
-with the mouse. Press `Esc` or click the window `X` to close the list without
-switching windows.
+`Enter` to activate it, `Delete` to ask the selected window to close, `Ctrl+C`
+to copy the selected line, or click an entry with the mouse. Press `Esc` or
+click the window `X` to close the list without switching windows. The `?`
+button shows these controls inside Taskeybar.
+
+Taskeybar stays open after `Delete` and selects the next matching window. This
+makes it practical to filter for one application and close several of its
+windows in sequence without repeatedly reopening the picker.
 
 For the full behavior, feature rationale, and filtering modes, see
 [docs/usage.md](docs/usage.md).

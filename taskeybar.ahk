@@ -107,6 +107,7 @@ class TaskeybarPopup {
     static KeyboardFallbackLeftFrameAdjustment := 7
     static LayoutMargin := 8
     static FuzzyWidth := 60
+    static HelpWidth := 28
     static FilterHeight := 23
     static MinimumControlWidth := 120
     static MinimumListHeight := 80
@@ -123,6 +124,10 @@ class TaskeybarPopup {
         this.isRefreshing := false
         this.isSuppressingSelectionAction := false
         this.isVisible := false
+        this.pendingCloseHwnd := 0
+        this.pendingCloseIndex := 0
+        this.pendingCloseChecksRemaining := 0
+        this.pendingCloseTimer := ObjBindMethod(this, "CheckPendingClose")
 
         this.gui := Gui(
             Format(
@@ -134,6 +139,7 @@ class TaskeybarPopup {
         )
         this.filterEdit := this.gui.Add("Edit", Format("vFilterText w{}", TaskeybarPopup.InitialFilterWidth))
         this.fuzzyCheck := this.gui.Add("Checkbox", "vFuzzy x+8 yp+2", "Fuzzy")
+        this.helpButton := this.gui.Add("Button", "x+8 yp-2 w28 h23", "?")
         this.listBox := this.gui.Add(
             "ListBox",
             Format(
@@ -149,6 +155,7 @@ class TaskeybarPopup {
         this.gui.OnEvent("Size", ObjBindMethod(this, "HandleGuiSize"))
         this.filterEdit.OnEvent("Change", ObjBindMethod(this, "FilterWindowList"))
         this.fuzzyCheck.OnEvent("Click", ObjBindMethod(this, "FilterWindowList"))
+        this.helpButton.OnEvent("Click", ObjBindMethod(this, "ShowHelp"))
         this.listBox.OnEvent("Change", ObjBindMethod(this, "HandleListBoxChange"))
 
     }
@@ -183,7 +190,7 @@ class TaskeybarPopup {
         this.isRefreshing := false
     }
 
-    UpdateWindowList() {
+    UpdateWindowList(fallbackSelectedIndex := 1) {
         allRows := WindowCatalog.GetSortedRows()
         this.rows := []
         this.listBox.Delete()
@@ -216,7 +223,11 @@ class TaskeybarPopup {
         if (this.rows.Length > 0) {
             this.isSuppressingSelectionAction := true
             try {
-                this.listBox.Value := (selectedIndex != 0 ? selectedIndex : 1)
+                this.listBox.Value := (
+                    selectedIndex != 0
+                        ? selectedIndex
+                        : Min(Max(fallbackSelectedIndex, 1), this.rows.Length)
+                )
             } finally {
                 this.isSuppressingSelectionAction := false
             }
@@ -261,14 +272,16 @@ class TaskeybarPopup {
     UpdateLayout(width, height) {
         margin := TaskeybarPopup.LayoutMargin
         fuzzyWidth := TaskeybarPopup.FuzzyWidth
+        helpWidth := TaskeybarPopup.HelpWidth
         filterHeight := TaskeybarPopup.FilterHeight
-        filterWidth := Max(TaskeybarPopup.MinimumControlWidth, width - (margin * 3) - fuzzyWidth)
+        filterWidth := Max(TaskeybarPopup.MinimumControlWidth, width - (margin * 4) - fuzzyWidth - helpWidth)
         listTop := margin + filterHeight + margin
         listWidth := Max(TaskeybarPopup.MinimumControlWidth, width - (margin * 2))
         listHeight := Max(TaskeybarPopup.MinimumListHeight, height - listTop - margin)
 
         this.filterEdit.Move(margin, margin, filterWidth, filterHeight)
-        this.fuzzyCheck.Move(margin + filterWidth + margin, margin + 2)
+        this.fuzzyCheck.Move(margin + filterWidth + margin, margin + 2, fuzzyWidth)
+        this.helpButton.Move(margin + filterWidth + margin + fuzzyWidth + margin, margin, helpWidth, filterHeight)
         this.listBox.Move(margin, listTop, listWidth, listHeight)
     }
 
@@ -277,9 +290,19 @@ class TaskeybarPopup {
             return
         }
 
-        if (hwnd = this.filterEdit.Hwnd || hwnd = this.listBox.Hwnd || hwnd = this.fuzzyCheck.Hwnd) {
+        if (
+            hwnd = this.filterEdit.Hwnd
+            || hwnd = this.listBox.Hwnd
+            || hwnd = this.fuzzyCheck.Hwnd
+            || hwnd = this.helpButton.Hwnd
+        ) {
             if (GetKeyState("Ctrl", "P") && wParam = TaskeybarApp.VkC) {
                 this.CopySelectedWindowText()
+                return 0
+            }
+
+            if (wParam = TaskeybarApp.VkDelete) {
+                this.CloseSelectedWindow()
                 return 0
             }
 
@@ -344,6 +367,91 @@ class TaskeybarPopup {
         }
 
         A_Clipboard := itemText
+    }
+
+    CloseSelectedWindow() {
+        hWnd := this.GetSelectedHwnd()
+        selectedIndex := this.listBox.Value
+        if (hWnd = 0) {
+            return
+        }
+
+        targetSelector := "ahk_id " . hWnd
+        if (!WinExist(targetSelector)) {
+            this.preferredHwnd := 0
+            this.UpdateWindowList()
+            return
+        }
+
+        try {
+            WinActivate(targetSelector)
+        } catch TargetError {
+            this.preferredHwnd := 0
+            this.UpdateWindowList(selectedIndex)
+            return
+        }
+
+        try {
+            WinClose(targetSelector)
+        } catch TargetError {
+            this.preferredHwnd := 0
+            this.UpdateWindowList(selectedIndex)
+            WinActivate("ahk_id " . this.gui.Hwnd)
+            this.filterEdit.Focus()
+            return
+        }
+
+        this.pendingCloseHwnd := hWnd
+        this.pendingCloseIndex := selectedIndex
+        this.pendingCloseChecksRemaining := 300
+        SetTimer(this.pendingCloseTimer, 100)
+    }
+
+    CheckPendingClose() {
+        if (this.pendingCloseHwnd = 0) {
+            SetTimer(this.pendingCloseTimer, 0)
+            return
+        }
+
+        if (WinExist("ahk_id " . this.pendingCloseHwnd)) {
+            this.pendingCloseChecksRemaining -= 1
+            if (this.pendingCloseChecksRemaining <= 0) {
+                this.pendingCloseHwnd := 0
+                SetTimer(this.pendingCloseTimer, 0)
+            }
+            return
+        }
+
+        selectedIndex := this.pendingCloseIndex
+        this.pendingCloseHwnd := 0
+        this.pendingCloseIndex := 0
+        this.pendingCloseChecksRemaining := 0
+        SetTimer(this.pendingCloseTimer, 0)
+
+        this.state.lastPreferredWindowHwnd := 0
+        this.preferredHwnd := 0
+        this.UpdateWindowList(selectedIndex)
+        if (this.isVisible) {
+            WinActivate("ahk_id " . this.gui.Hwnd)
+            this.filterEdit.Focus()
+        }
+    }
+
+    ShowHelp(*) {
+        this.gui.Opt("+OwnDialogs")
+        MsgBox(
+            "Type to filter the window list.`n`n"
+                . "Keyboard shortcuts:`n"
+                . "Up / Down: Move the selection`n"
+                . "Enter: Activate the selected window`n"
+                . "Delete: Close the selected window; keep this list open`n"
+                . "Ctrl+C: Copy the selected line`n"
+                . "Esc: Close Taskeybar without switching`n`n"
+                . "Fuzzy matching:`n"
+                . "The typed characters must appear in the same order, but other characters may appear between them.",
+            "Taskeybar Help",
+            "OK Iconi"
+        )
     }
 
     Close(*) {
@@ -483,6 +591,7 @@ class TaskeybarApp {
     static WmExitSizeMove := 0x0232
     static VkEnter := 0x0D
     static VkC := 0x43
+    static VkDelete := 0x2E
     static VkUp := 0x26
     static VkDown := 0x28
 
@@ -547,7 +656,13 @@ class TaskeybarApp {
     }
 }
 
-version := "1.0.0"
+version := "1.1.0"
+;@Ahk2Exe-Let U_version = %A_PriorLine~U)^(.+"){1}(.+)".*$~$2%
+;@Ahk2Exe-SetVersion %U_version%
+;@Ahk2Exe-SetProp Name, Taskeybar
+;@Ahk2Exe-SetProp Description, Keyboard-first window picker for Windows 11
+;@Ahk2Exe-SetProp Copyright, Copyright (C) 2023-2026 PerMail
+;@Ahk2Exe-SetProp OrigFilename, taskeybar.exe
 app := TaskeybarApp()
 
 MsgBox(

@@ -36,6 +36,15 @@ desktop flow:
   live.
 - Press `Ctrl+C` and confirm that the selected line is copied to the
   clipboard.
+- Select a window, press `Delete`, and confirm that it receives a normal close
+  request rather than having its process terminated. Confirm that Taskeybar
+  stays open and selects the next entry at the same list position.
+- Filter down to several windows from one application and confirm that repeated
+  presses of `Delete` close them in sequence without reopening Taskeybar.
+- Repeat the `Delete` check with an editor containing unsaved changes and
+  confirm that its save prompt appears and can cancel closing.
+- Click the `?` button and confirm that the keyboard help appears as a modal
+  dialog owned by Taskeybar.
 - Resize the window, close it, reopen it, and confirm that the current size is
   reused while the script keeps running.
 - Move a keyboard-triggered popup, close it by clicking another window, and
@@ -63,6 +72,10 @@ Push-Location 'C:\Program Files\AutoHotkey\Compiler'
 .\Ahk2Exe.exe /in "$repo\taskeybar.ahk" /out "$repo\release\taskeybar.exe" /bin 'C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe'
 Pop-Location
 ```
+
+The compiler directives beside the runtime `version` value copy that version
+into the executable's file and product metadata. Keep the changelog release
+heading and runtime version aligned before building.
 
 Keep the generated file in `release/` or another ignored local location before
 uploading it to the release.

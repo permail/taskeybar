@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.1.0 - 2026-09-04
+
+- Add `Delete` to request a normal close of the selected window while
+  preserving application save prompts and cancellation. Taskeybar stays open
+  and keeps the next matching window selected for repeated closing.
+- Add a compact in-app `?` help dialog for keyboard controls and filtering.
+
 ## v1.0.0 - 2026-04-13
 
 - Add a second fixed trigger: `Ctrl+Win+Space` opens Taskeybar without using

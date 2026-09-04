@@ -60,6 +60,14 @@ it is running.
 - `Ctrl+C`
   Copies the selected line exactly as shown. This is useful when you want to
   inspect or share the exact title and process combination.
+- `Delete`
+  Asks the selected window to close, just as its normal window `X` does.
+  Taskeybar does not terminate the process, so the application can still ask
+  you to save changes or cancel closing. Taskeybar stays open. After the window
+  closes, the next matching entry remains selected at the same list position,
+  making it quick to close several related windows in sequence. For example,
+  filter for `Word` and press `Delete` repeatedly to close several Word windows.
+  The target comes forward only while it needs to show a confirmation.
 
 When possible, Taskeybar preselects the previously active window so repeated
 switching between a small set of windows stays fast.
@@ -72,6 +80,11 @@ Taskeybar closes without switching windows when you:
 - click the window `X`
 
 Taskeybar is intended to behave like a transient popup, not a permanent dock.
+
+## In-App Help
+
+Click the `?` button to show a compact reference for the keyboard controls and
+filter behavior. The help is built into Taskeybar and does not open a browser.
 
 ## Window Size And Position
 
